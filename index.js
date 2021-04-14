@@ -9,4 +9,4 @@ const puppeteer = require('puppeteer');
     console.log(await page.evaluate(el => el.textContent, title));
 
     await browser.close();
-})
+})();
