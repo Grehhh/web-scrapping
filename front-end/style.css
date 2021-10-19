@@ -1,3 +1,27 @@
 body {
     font-family: sans-serif;
+    background-color: lightgrey;
+    letter-spacing: 0.1em;
+}
+
+h1 {
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+ul {
+    width: 70%;
+    display: block;
+    margin: 0 auto;
+}
+
+li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    list-style-type: circle;
+}
+
+a {
+    text-decoration: none;
 }

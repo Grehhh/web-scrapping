@@ -15,9 +15,9 @@
         let linksPrint = [];
         for(let i = 0; i < links.length; i++) {
             // nums.push(`<li>${i}</li>`)
-            linksPrint += `<li><a href="${links[i].url}" target="_blank">${links[i].url}</a></li>`
+            linksPrint += `<li><a href="${links[i].url}" target="_blank">${links[i].name}</a></li>`
         }
-        let palHTML = `<ul>${linksPrint}</ul>`
+        let palHTML = `<h1>Aqui estan los links</h1><ul>${linksPrint}</ul>`
         document.body.innerHTML = palHTML;
     </script>
 </body>
