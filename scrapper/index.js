@@ -1,5 +1,8 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
 //----para lectura
 // let rawData = fs.readFileSync('./links.json')
 // let links = JSON.parse(rawData);     
