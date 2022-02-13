@@ -2,33 +2,32 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const express = require('express');
 const mongoose = require('mongoose');
-const res = require('express/lib/response');
-const { error } = require('console');
 const app = express();
 const port = 3000;
 
+
+const getLinks = async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto('https://southparkspainhd.wordpress.com/');
+    const names = await page.$$eval('.menu-item-object-post', name => name.map(n => n.textContent));
+    const hrefs = await page.$$eval('.menu-item-object-post > a', as => as.map(a => a.href));
+    const linksToDB = [];
+    for(let i = 0; i < hrefs.length; i++) {
+        linksToDB.push({
+            name: names[i],
+            url: hrefs[i]
+        })
+    };
+    await browser.close();
+    return linksToDB;
+}
+
 (async () => {
 
-    const getLinks = async () => {
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.goto('https://southparkspainhd.wordpress.com/');
-        const names = await page.$$eval('.menu-item-object-post', name => name.map(n => n.textContent));
-        const hrefs = await page.$$eval('.menu-item-object-post > a', as => as.map(a => a.href));
-        const linksToDB = [];
-        for(let i = 0; i < 3; i++) {
-            linksToDB.push({
-                name: names[i],
-                url: hrefs[i]
-            })
-        };
-        await browser.close();
-        return linksToDB;
-    }
-    
     const name = process.argv.slice(2,3);
     const pass = process.argv.slice(3);
-
+    
     const uri = 'mongodb+srv://' + name + ':' + pass+ '@cluster0.xmw07.mongodb.net/testDB1?retryWrites=true&w=majority'
     mongoose.connect(uri, (err) => {
         if(err) {
@@ -50,22 +49,21 @@ const port = 3000;
     const Link = mongoose.model('Link', linkSchema);
     const linksToDB = await getLinks();
     // const linksToDB =  { 
-    //     name: 'name3',
-    //     url: 'name3.url'
-    // }
+        //     name: 'name3',
+        //     url: 'name3.url'
+        // }
+    await Link.deleteMany({})        
     try {
-        const result = await Link.insertMany(linksToDB);
+        await Link.insertMany(linksToDB);
         console.log('links inserted');
     } catch(err) {
-        console.error(err);
+        console.log(err);
     }
-
-    //empty collection
-    // await Link.deleteMany({})        
     
     app.listen(port, () => {
         console.log('App listening on port ' + port);
     });
+    
 })();
 
 
